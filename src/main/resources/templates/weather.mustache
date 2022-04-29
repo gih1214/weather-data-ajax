@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관광지코스별 관광지 상세 날씨 조회서비스</title>
+
+    <!-- 제이쿼리 추가 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="weather-info-box">
+        <!-- ajax 로 CSR 할거임 -->
+    </div>
+</body>
+
+<script>
+
+    // fetch로 공공데이터 받아오기
+    async function weather() {
+        let response = await fetch(`/api/data`);
+        // console.log(response);
+        let responseParse = await response.json();
+        // console.log(responseParse.response.body.items);
+        // console.log(responseParse.response.body.items.item[0].sky);
+
+        // CSR
+        for (dataTbl of responseParse.response.body.items.item) {
+            // console.log(dataTbl);
+            $("#weather-info-box").append(boxRender());
+        }
+    }
+    weather(); // 함수 호출
+
+    // 랜더링 함수
+    function boxRender() {
+
+        let sky = dataTbl.sky;
+        // console.log(sky);
+        switch (sky) {
+            case 1:
+                sky = "맑음";
+                break;
+
+            case 2:
+                sky = "구름";
+                break;
+
+            case 3:
+                sky = "흐림";
+                break;
+
+            case 4:
+                sky = "비";
+                break;
+
+            case 5:
+                sky = "소나기";
+                break;
+
+            case 6:
+                sky = "비눈";
+                break;
+
+            case 7:
+                sky = "눈비";
+                break;
+
+            default:
+                sky = "눈";
+        }
+        // console.log(sky);
+
+        return ` <div>
+            코스명 : ${dataTbl.courseName}
+        </div>
+        <div>
+            지역 : ${dataTbl.courseAreaName} ${dataTbl.spotAreaName}
+        </div>
+        <div>
+            관광지명 : ${dataTbl.spotName}
+        </div>
+        <div>
+            예보시간 : ${dataTbl.tm}
+        </div>
+        <div>
+            하늘상태 : ${sky}
+        </div>
+        <br />
+        `;
+    }
+</script>
+
+</html>
